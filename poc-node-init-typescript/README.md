@@ -1,4 +1,6 @@
 # Poc Node Init TypeScript
+Poc baseada no mini curso:
+https://www.youtube.com/watch?v=M-pNDHC25Vg&list=PLE0DHiXlN_qp251xWxdb_stPj98y1auhc
 
 ### Criar projeto 
 
