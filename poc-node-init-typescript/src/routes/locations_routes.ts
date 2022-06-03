@@ -2,11 +2,24 @@ import { Router } from "express";
 import connection from "../database/connection";
 import multer from "multer";
 import multerConfig from '../config/multer';
+import { celebrate, Joi } from "celebrate";
 
 const locationsRouter = Router();
 const upload = multer(multerConfig);
 
-locationsRouter.post('/', async (request, response) => {
+locationsRouter.post('/', celebrate({
+    body: Joi.object().keys({
+        name: Joi.string().required(),
+        email: Joi.string().required().email(),
+        whatsapp: Joi.string().required(),
+        latitude: Joi.number().required(),
+        logitude: Joi.number().required(),
+        city: Joi.string().required(),
+        uf: Joi.string().required().max(2),
+        items: Joi.array().required()
+
+    })
+}, {abortEarly: false}),async (request, response) => {
     const {
         name,
         email,
@@ -101,7 +114,7 @@ locationsRouter.post('/', async (request, response) => {
         ...location, 
         image
     }
-    
+
     await connection('locations').update(locationBase).where('id', id);
 
     response.json(locationBase);
