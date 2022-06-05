@@ -3,9 +3,11 @@ import connection from "../database/connection";
 import multer from "multer";
 import multerConfig from '../config/multer';
 import { celebrate, Joi } from "celebrate";
+import isAuthenticated from "../middlewares/authenticated";
 
 const locationsRouter = Router();
 const upload = multer(multerConfig);
+locationsRouter.use(isAuthenticated);
 
 locationsRouter.post('/', celebrate({
     body: Joi.object().keys({
@@ -89,11 +91,19 @@ locationsRouter.post('/', celebrate({
 
  locationsRouter.get('/',async (request, response) => {
     const { city, uf } = request.query;
+    console.info(city + ' - ' + uf)
+    if ( typeof city !== "undefined" || typeof uf !== "undefined") {
+        console.info("sssss")
+        const location =  await connection('locations')
+            .where('city', String(city))
+            .orWhere('uf', String(uf))
+            .select()
+            .distinct();
 
-    const location =  await connection('locations').where('city', String(city))
-        .where('uf', String(uf))
-        .select()
-        .distinct();
+        return response.json(location);
+    }
+
+    const location =  await connection('locations').select('*');
 
     return response.json(location);
  });
