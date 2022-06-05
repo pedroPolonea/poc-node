@@ -91,9 +91,9 @@ locationsRouter.post('/', celebrate({
 
  locationsRouter.get('/',async (request, response) => {
     const { city, uf } = request.query;
-    console.info(city + ' - ' + uf)
+
     if ( typeof city !== "undefined" || typeof uf !== "undefined") {
-        console.info("sssss")
+
         const location =  await connection('locations')
             .where('city', String(city))
             .orWhere('uf', String(uf))
